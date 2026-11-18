@@ -575,6 +575,7 @@ const beats = [
   },
   // S14: tap the half-line that fits the striped part
   async () => {
+    lines([]);                                        // focus is inside the little square: dim the squares
     subq('Tap the correct half-line of the small square that fits the striped part in it.', 340);
     show('halfLines');
     say("Now, let's find a part of the square that completely fits the striped region.");
@@ -599,6 +600,7 @@ const beats = [
   async () => {
     show('shadeTri', 0); clearG('halfNums'); show('halfLines', 0); show('qBox', 0);
     $('greenTri').setAttribute('points', R.green); show('greenTri');
+    lines(['L_out','L_qv','L_qh']);                   // back to 'of the whole square'
     tok('comma', {html:',', x:DX + 32, y:DY + 14, size:40});
     tok('h', {html:F(1,2), x:DX + 64, y:DY, color:C.green, size:40});
     await say('We have 2 fractions from the whole square that we identified…');
@@ -647,7 +649,7 @@ const beats = [
   },
   // S24: three parts – thirds?
   async () => {
-    show('hatchG', 0);
+    show('hatchG', 0); lines([]);                     // focus is inside the green shape: dim the squares
     const pl = $('partLines'); pl.innerHTML = '';
     R.partLines.forEach(([x1, y1, x2, y2]) => el('line', {x1, y1, x2, y2}, pl));
     show('partLines');
@@ -702,7 +704,7 @@ const beats = [
   },
   // S35: multiply again → ?/?
   async () => {
-    show('greenTri', 0); show('blueWhole');
+    show('greenTri', 0); show('blueWhole'); lines(['L_out','L_qv','L_qh']);
     tok('e8', {x:1050, y:440}); tok('x2', {x:1110, y:440, size:40}); tok('q34', {x:1170, y:440});
     tok('eq2', {html:'=', x:1235, y:440, size:40}); tok('qq2', {html:QQ, x:1315, y:440, size:40});
     const ch = makeChips([
