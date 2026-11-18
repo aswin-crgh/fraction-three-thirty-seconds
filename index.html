@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Fraction Is Striped C</title>
+<style>
+:root{--gold:#FFC000;--yel:#FFE600;--green:#92D050;--blue:#1EB4F0;--speech:#46C8FF}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#071a27;overflow:hidden;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif}
+#stage{position:fixed;left:50%;top:50%;width:1600px;height:900px;transform-origin:50% 50%;
+  background:radial-gradient(ellipse 80% 90% at 45% 45%,#1d6a90 0%,#145073 50%,#0d3550 100%);overflow:hidden;color:#fff;user-select:none;-webkit-user-select:none}
+#fig{position:absolute;overflow:visible;transition:left 1s ease,top 1s ease,width 1s ease,height 1s ease}
+.fx{transition:opacity .7s ease}
+.o{opacity:0;pointer-events:none}
+#header{position:absolute;text-align:center;font-size:44px;line-height:1.28;transition:left 1s ease,top 1s ease,width 1s ease,opacity .6s;text-shadow:0 2px 6px rgba(0,0,0,.25)}
+#header span{transition:color .4s,text-shadow .4s}
+#header .em{color:var(--yel);text-shadow:0 0 16px rgba(255,190,0,.75)}
+#header.dim{opacity:.3}
+#subq{position:absolute;left:var(--pl);width:var(--pw);text-align:center;font-size:36px;line-height:1.25;opacity:0;transition:opacity .5s}
+.tok{position:absolute;transform:translate(-50%,-50%);font-size:44px;transition:left .8s ease,top .8s ease,opacity .5s,color .4s,font-size .8s ease;white-space:nowrap;pointer-events:none;text-shadow:0 2px 5px rgba(0,0,0,.25)}
+.fr{display:inline-flex;flex-direction:column;align-items:center;line-height:1;vertical-align:middle}
+.fr>span{padding:2px 5px}
+.fr>i{display:block;align-self:stretch;height:3px;background:currentColor;margin:4px 0;border-radius:2px}
+.tok.lbl{font-size:28px;background:rgba(3,22,36,.72);border:2px solid currentColor;border-radius:10px;padding:4px 9px;text-shadow:none}
+.tok.lbl .fr>i{height:2px;margin:3px 0}
+.ph{opacity:.14;transition:opacity .5s,text-shadow .5s}
+.ph.lit{opacity:1;text-shadow:0 0 14px rgba(255,200,0,.8)}
+.fly{color:#d6f2ff;font-weight:700;transition:left .9s cubic-bezier(.5,0,.3,1),top .9s cubic-bezier(.5,0,.3,1),font-size .9s,color .9s,opacity .3s}
+.qb{display:inline-block;background:#1e9be0;color:#fff;border-radius:8px;padding:3px 13px!important;box-shadow:0 3px 0 #0f5f8f}
+.chips{position:absolute;left:var(--pl);width:var(--pw);display:flex;justify-content:center;gap:26px;flex-wrap:wrap;opacity:0;transition:opacity .5s}
+.chips.col{flex-direction:column;align-items:center;gap:16px}
+.chip{font:inherit;font-size:36px;color:#fff;border:0;border-radius:14px;padding:10px 20px;min-width:86px;
+  background:linear-gradient(#29abef,#1786c9);box-shadow:0 5px 0 #0d5a8a,0 8px 16px rgba(0,0,0,.25);cursor:pointer;transition:background .3s,transform .15s,opacity .4s}
+.chip.op{font-size:42px;min-width:92px;padding:6px 18px}
+.chip.txt{font-size:30px;min-width:460px;padding:12px 24px}
+.chip:hover:not(:disabled){transform:translateY(-2px)}
+.chip:disabled{cursor:default}
+.chip.ok{background:linear-gradient(#33c45e,#1e9a43);box-shadow:0 5px 0 #136b2d,0 8px 16px rgba(0,0,0,.25)}
+.chip.off{opacity:.4}
+.chip.bad{background:linear-gradient(#ea5a5a,#c03434);box-shadow:0 5px 0 #7f1f1f;animation:shake .45s}
+.chip.hint{animation:pulse .7s 3;background:linear-gradient(#ffd23a,#e0a800);box-shadow:0 5px 0 #946f00}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-11px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+@keyframes pulse{50%{transform:scale(1.12)}}
+#speech{position:absolute;left:var(--pl);width:var(--pw);bottom:30px;padding:12px 20px;border-radius:14px;
+  font:italic 28px/1.3 Georgia,"Times New Roman",serif;color:var(--speech);text-align:center;
+  background:rgba(3,22,36,.38);backdrop-filter:blur(2px);opacity:0;transition:opacity .4s,left 1s ease,width 1s ease}
+#speech.wide{left:var(--wl);width:var(--ww)}
+#prog{position:absolute;left:0;bottom:0;height:5px;width:0;background:linear-gradient(90deg,#1EB4F0,#92D050);transition:width .6s}
+#ctrl{position:absolute;right:14px;top:12px;display:flex;gap:8px;align-items:center;opacity:.8}
+#ctrl button{font:14px/1 system-ui,sans-serif;color:#d9f1ff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:7px 10px;cursor:pointer}
+#ctrl button:hover{background:rgba(255,255,255,.2)}
+#ctrl button.glow{background:#1e9be0;border-color:#7fd3ff;animation:pulse 1s 3}
+#voiceLbl{font:12px system-ui,sans-serif;color:#8fbfd8;margin-right:6px}
+#start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,20,32,.5);z-index:5}
+#start button{font:600 40px system-ui,sans-serif;color:#fff;border:0;border-radius:20px;padding:22px 54px;background:linear-gradient(#29abef,#1786c9);box-shadow:0 7px 0 #0d5a8a,0 14px 30px rgba(0,0,0,.35);cursor:pointer}
+/* instant rebuild when jumping to an earlier step */
+#stage.instant *{transition:none!important;animation:none!important}
+/* back / forward */
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:150px;padding:0;border:0;border-radius:14px;background:transparent;
+  color:#d4f0ff;opacity:.26;cursor:pointer;display:none;z-index:4;transition:opacity .25s,background .25s}
+.nav svg{width:26px;height:52px}
+.nav:hover{opacity:.9;background:rgba(255,255,255,.06)}
+.nav.show{display:block}
+#navL{left:8px} #navR{right:8px}
+#navR.cue{opacity:.62;animation:nudge 1.5s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateY(-50%) translateX(5px)}}
+#reviewTag{position:absolute;left:16px;top:14px;font:13px system-ui,sans-serif;color:#bfe6ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;padding:5px 12px;display:none}
+/* svg */
+.num{paint-order:stroke;stroke:rgba(0,28,46,.8);stroke-width:5px;stroke-linejoin:round;font-family:"Segoe UI",system-ui,sans-serif}
+.pop{transform-box:fill-box;transform-origin:center;animation:pop .45s ease-out both}
+@keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.18);opacity:1}100%{transform:scale(1)}}
+.hit{fill:transparent;cursor:pointer;pointer-events:all;transition:fill .25s}
+.hit:hover{fill:rgba(255,255,255,.14)}
+.hit.nohover:hover{fill:transparent}
+.hit.bad{fill:rgba(255,80,80,.3)!important}
+.hit.nohover.bad{fill:rgba(255,80,80,.12)!important}
+.hit.hint{fill:rgba(255,226,0,.38)!important}
+.hline{cursor:pointer}
+.hline .dash{stroke:#fff;stroke-width:2.5;stroke-dasharray:8 7;transition:stroke .25s,stroke-width .25s}
+.hline .hl{stroke:transparent;stroke-width:28;pointer-events:stroke}
+.hline:hover .dash{stroke:var(--yel);stroke-width:4}
+.hline.bad .dash{stroke:#ff5a5a;stroke-width:4}
+.hline.hint .dash,.hline.good .dash{stroke-width:4.5;stroke-dasharray:none}
+.hline.hint .dash{stroke:var(--yel)}
+.hline.good .dash{stroke:var(--green)}
+.hline{transition:opacity .5s}
+.stamp{fill:rgba(110,200,255,.17);stroke:#8fd6ff;stroke-width:1.3;stroke-linejoin:round;transition:fill .8s}
+#stamps.settled .stamp{fill:rgba(110,200,255,.03)}
+.goldTri{fill:rgba(255,192,0,.2);stroke:#FFC000;stroke-width:3;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="fig" viewBox="0 0 480 480" style="left:524px;top:215px;width:552px;height:552px">
+    <defs>
+      <pattern id="hatch" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="11" stroke="#F0883E" stroke-width="1.8"/>
+      </pattern>
+      <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter>
+    </defs>
+
+    <g id="hatchG" class="fx"><polygon points="360,120 480,0 480,240 360,240" fill="url(#hatch)"/></g>
+    <g id="stamps" class="fx"></g>
+
+    <g id="baseLines" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <rect id="L_out" class="fx" x="0" y="0" width="480" height="480"/>
+      <line id="L_qv" class="fx" x1="240" y1="0" x2="240" y2="240"/>
+      <line id="L_qh" class="fx" x1="240" y1="240" x2="480" y2="240"/>
+      <line id="L_sv" class="fx" x1="360" y1="0" x2="360" y2="240"/>
+      <line id="L_sh" class="fx" x1="240" y1="120" x2="480" y2="120"/>
+      <line id="L_aq" class="fx" x1="240" y1="240" x2="480" y2="0"/>
+      <line id="L_ar" class="fx" x1="0" y1="480" x2="240" y2="240"/>
+      <line id="L_main" class="fx" x1="0" y1="0" x2="480" y2="480"/>
+      <line id="L_bl" class="fx" x1="0" y1="240" x2="240" y2="480"/>
+    </g>
+
+    <polygon id="stripeEdge" class="fx o" points="360,120 480,0 480,240 360,240" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+    <g id="gWhole" class="fx o" fill="none">
+      <rect x="0" y="0" width="480" height="480" stroke="#FF8A00" stroke-width="18" filter="url(#glow)" opacity=".85"/>
+      <rect x="0" y="0" width="480" height="480" stroke="#FFE14D" stroke-width="4.5"/>
+    </g>
+    <g id="gStripe" class="fx o" fill="none" stroke-linejoin="round">
+      <polygon points="360,120 480,0 480,240 360,240" stroke="#FF8A00" stroke-width="18" filter="url(#glow)" opacity=".85"/>
+      <polygon points="360,120 480,0 480,240 360,240" stroke="#FFF4C0" stroke-width="4"/>
+    </g>
+    <g id="gQuad" class="fx o" fill="none">
+      <rect x="240" y="0" width="240" height="240" stroke="#FF8A00" stroke-width="18" filter="url(#glow)" opacity=".85"/>
+      <rect x="240" y="0" width="240" height="240" stroke="#FFE14D" stroke-width="4.5"/>
+    </g>
+    <g id="qGrid" class="fx o" stroke="#FFC000" stroke-width="3" fill="none">
+      <rect x="0" y="0" width="480" height="480"/>
+      <line x1="240" y1="0" x2="240" y2="480"/><line x1="0" y1="240" x2="480" y2="240"/>
+    </g>
+    <g id="qNums" class="fx"></g>
+    <polygon id="qMover" class="fx o" data-fo=".42" fill="#FFC000" fill-opacity=".42" stroke="#FFE14D" stroke-width="3.5" stroke-linejoin="round"/>
+    <rect id="qBox" class="fx o" x="240" y="0" width="240" height="240" fill="none" stroke="#FFC000" stroke-width="4"/>
+    <polygon id="shadeTri" class="fx o" data-fo=".78" fill="#D4A017" fill-opacity=".78"/>
+    <g id="halfNums" class="fx"></g>
+    <g id="gGreen" class="fx o" fill="none" stroke-linejoin="round">
+      <polygon id="gGreenBlur" stroke="#6CFF3A" stroke-width="18" filter="url(#glow)" opacity=".75"/>
+      <polygon id="gGreenLine" stroke="#B6F27A" stroke-width="4.5"/>
+    </g>
+    <g id="gUnit" class="fx o" fill="none" stroke-linejoin="round">
+      <polygon points="360,120 480,0 480,120" stroke="#4FC8FF" stroke-width="16" filter="url(#glow)" opacity=".8"/>
+      <polygon points="360,120 480,0 480,120" stroke="#BFEAFF" stroke-width="4"/>
+    </g>
+    <polygon id="greenTri" class="fx o" points="240,240 480,0 480,240" fill="none" stroke="#92D050" stroke-width="4.5" stroke-linejoin="round"/>
+    <g id="partLines" class="fx o" stroke="#fff" stroke-width="3.5" stroke-linecap="round">
+      <line x1="360" y1="120" x2="360" y2="240"/><line x1="360" y1="120" x2="480" y2="120"/>
+    </g>
+    <line id="sqDiag" class="fx o" x1="360" y1="120" x2="480" y2="240" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+    <polygon id="tinyHi" class="fx o" data-fo=".6" fill="#92D050" fill-opacity=".6"/>
+    <g id="partNums" class="fx"></g>
+    <g id="tinyNums" class="fx"></g>
+    <polygon id="goldStripe" class="fx o" points="360,120 480,0 480,240 360,240" fill="none" stroke="#FFC000" stroke-width="4.5" stroke-linejoin="round"/>
+    <rect id="blueWhole" class="fx o" x="0" y="0" width="480" height="480" fill="none" stroke="#1EB4F0" stroke-width="5"/>
+    <g id="halfLines" class="fx o" fill="none">
+      <g class="hline" id="hlH"><line class="dash" x1="215" y1="120" x2="505" y2="120"/><line class="hl" x1="215" y1="120" x2="505" y2="120"/></g>
+      <g class="hline" id="hlV"><line class="dash" x1="360" y1="-25" x2="360" y2="265"/><line class="hl" x1="360" y1="-25" x2="360" y2="265"/></g>
+      <g class="hline" id="hlD"><line class="dash" x1="215" y1="-25" x2="505" y2="265"/><line class="hl" x1="215" y1="-25" x2="505" y2="265"/></g>
+      <g class="hline" id="hlA"><line class="dash" x1="215" y1="265" x2="505" y2="-25"/><line class="hl" x1="215" y1="265" x2="505" y2="-25"/></g>
+    </g>
+    <g id="finalG" class="fx"></g>
+    <polygon id="mover" class="fx o" data-fo=".6" fill="#fff" fill-opacity=".6" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <g id="stampNums" class="fx"></g>
+    <g id="finalNums" class="fx"></g>
+    <g id="hits"></g>
+  </svg>
+
+  <div id="header" style="left:480px;top:40px;width:640px">
+    What <span id="wFraction">fraction</span> of the<br><span id="wWhole">whole square</span> is <span id="wStriped">striped</span>?
+  </div>
+  <div id="subq"></div>
+  <div id="speech"></div>
+  <div id="prog"></div>
+  <div id="ctrl">
+    <span id="voiceLbl"></span>
+    <button id="bReplay" title="Hear the line again">↻ Replay line</button>
+    <button id="bMute" title="Mute / unmute narration">🔊 Sound on</button>
+    <button id="bRestart" title="Start over">⟲ Restart</button>
+  </div>
+  <button class="nav" id="navL" title="Previous step (←)"><svg viewBox="0 0 24 48"><path d="M17 6 L7 24 L17 42" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <button class="nav" id="navR" title="Next step (→)"><svg viewBox="0 0 24 48"><path d="M7 6 L17 24 L7 42" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div id="reviewTag">Revisiting an earlier step · › to move on</div>
+  <div id="start"><button id="bStart">▶ Start</button></div>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const stage = $('stage');
+const INIT = stage.innerHTML;                  // pristine stage, for rebuilding when jumping between steps
+const qs = new URLSearchParams(location.search);
+const SPEED = +qs.get('speed') || 1;          // test helper: ?speed=3
+const AUTO = qs.has('auto');                   // test helper: auto-answers gates
+
+/* Flow control. MODE: 'live' (normal), 'fast' (instant silent rebuild of earlier steps),
+   'review' (replaying a past step with its recorded answer, then holding).
+   Every async helper is guarded: when the user jumps, gen changes and stale flows stop. */
+let gen = 0, MODE = 'live';
+const ABORT = {abort:true};
+addEventListener('unhandledrejection', e => { if(e.reason === ABORT) e.preventDefault(); });
+function guard(p){ const g = gen; return p.then(v => { if(g !== gen) throw ABORT; return v; }); }
+const later = (fn, ms) => MODE === 'fast' ? fn() : setTimeout(fn, ms);
+const sleep = ms => guard(MODE === 'fast' ? Promise.resolve() : new Promise(r => setTimeout(r, ms / SPEED)));
+const C = {gold:'#FFC000', green:'#92D050', white:'#fff'};
+
+/* ---------- 16:9 fit ---------- */
+/* Form-agnostic stage. Landscape: figure left, panel right (16:9). Portrait: question on top, figure, then the panel (9:16).
+   Panel items are authored in landscape stage coordinates (x >= 1000) and shifted by (pdx, pdy) in portrait. */
+const GEOMS = {
+  land:{W:1600, H:900, pdx:0, pdy:0, pl:880, pw:660, wl:250, ww:1100,
+        LAYOUTS:{intro:{left:524,top:215,size:552}, main:{left:80,top:90,size:720}, outro:{left:524,top:200,size:552}},
+        head:{main:{left:880,top:52,width:660}, other:{left:480,top:40,width:640}},
+        dock:m => [m.left + m.size + 62, m.top + m.size / 4]},                 // beside the little square
+  port:{W:900, H:1600, pdx:-760, pdy:620, pl:120, pw:660, wl:60, ww:780,
+        LAYOUTS:{intro:{left:150,top:230,size:600}, main:{left:150,top:200,size:600}, outro:{left:150,top:230,size:600}},
+        head:{main:{left:60,top:56,width:780}, other:{left:60,top:60,width:780}},
+        dock:m => [m.left + m.size * 0.75 - 40, m.top + m.size + 48]},         // below the little square's column
+};
+const wantGeom = () => innerHeight > innerWidth * 1.1 ? 'port' : 'land';
+let GK = wantGeom(), G = GEOMS[GK];
+function applyGeom(){
+  stage.style.width = G.W + 'px'; stage.style.height = G.H + 'px';
+  for(const k of ['pl','pw','wl','ww']) stage.style.setProperty('--' + k, G[k] + 'px');
+}
+function fit(){ const s = Math.min(innerWidth / G.W, innerHeight / G.H); stage.style.transform = `translate(-50%,-50%) scale(${s})`; }
+applyGeom(); fit();
+
+/* ---------- speech (browser TTS, Indian English) ---------- */
+let muted = qs.has('mute'), voice = null, cur = null, lastText = '';
+const hasTTS = 'speechSynthesis' in window;
+function pickVoice(){
+  if(!hasTTS) return;
+  const vs = speechSynthesis.getVoices();
+  const inV = vs.filter(v => /en[-_]IN/i.test(v.lang));
+  voice = inV.find(v => /Veena|Isha|Rishi|Neerja|Heera|Prabhat|Ravi|Google/i.test(v.name)) || inV[0] || null;
+  $('voiceLbl').textContent = voice ? `voice: ${voice.name}` : 'voice: default (en-IN)';
+}
+if(hasTTS){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+const est = t => (900 + t.length * 66) / SPEED;
+
+function showSpeech(t){ const s = $('speech'); s.textContent = t; s.style.opacity = 1; }
+function speakToken(tk){
+  clearTimeout(tk.tm);
+  const e = est(tk.text);
+  tk.utt = null;
+  if(hasTTS) speechSynthesis.cancel();
+  if(muted || !hasTTS || SPEED > 1){ tk.tm = setTimeout(tk.finish, e); return; }
+  const u = new SpeechSynthesisUtterance(tk.text);
+  u.lang = 'en-IN'; if(voice) u.voice = voice; u.rate = .95; u.pitch = 1.03;
+  tk.utt = u;
+  u.onend = () => { if(tk.utt === u) tk.finish(); };
+  u.onerror = ev => { if(tk.utt === u && ev.error !== 'interrupted' && ev.error !== 'canceled') tk.finish(); };
+  tk.tm = setTimeout(tk.finish, e * 1.8 + 2500);           // safety net if onend never fires
+  setTimeout(() => { if(tk.utt === u) speechSynthesis.speak(u); }, 60);
+}
+function say(text, {hold = 550} = {}){
+  lastText = text; showSpeech(text);
+  if(MODE === 'fast') return guard(Promise.resolve());
+  return guard(new Promise(res => {
+    const tk = {text, done:false};
+    tk.finish = () => { if(tk.done) return; tk.done = true; clearTimeout(tk.tm); tk.utt = null; if(cur === tk) cur = null; setTimeout(res, hold / SPEED); };
+    if(cur) cur.finish();
+    cur = tk; speakToken(tk);
+  }));
+}
+function abortSpeech(){ if(cur){ cur.utt = null; clearTimeout(cur.tm); cur = null; } if(hasTTS) speechSynthesis.cancel(); }
+const speechIdle = () => new Promise(r => { const t = () => cur ? setTimeout(t, 120) : r(); t(); });
+
+/* ---------- layout ---------- */
+let LAYOUTS = G.LAYOUTS;
+let CUR = LAYOUTS.intro;
+function layout(name){
+  const L = LAYOUTS[name], f = $('fig'); CUR = L;
+  Object.assign(f.style, {left:L.left+'px', top:L.top+'px', width:L.size+'px', height:L.size+'px'});
+  const hd = G.head[name === 'main' ? 'main' : 'other'];
+  Object.assign($('header').style, {left:hd.left + 'px', top:hd.top + 'px', width:hd.width + 'px'});
+  $('speech').classList.toggle('wide', name !== 'main');
+}
+function emph(id){ ['wFraction','wWhole','wStriped'].forEach(w => $(w).classList.toggle('em', w === id)); }
+function subq(text, top = 290){ const s = $('subq'); if(!text){ s.style.opacity = 0; return; } s.innerHTML = text; s.style.top = (top + G.pdy) + 'px'; s.style.opacity = 1; }
+
+/* ---------- svg helpers ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+function show(id, v = 1){ const e = $(id); e.style.opacity = v; e.style.pointerEvents = v > 0 ? 'auto' : 'none'; }
+const LINES = ['L_out','L_qv','L_qh','L_sv','L_sh','L_aq','L_ar','L_main','L_bl'];
+function lines(bright, dimV = .22){ LINES.forEach(id => $(id).style.opacity = (bright === 'all' || bright.includes(id)) ? 1 : dimV); }
+function popText(gid, x, y, txt, {size = 26, fill = '#fff', bold = 1} = {}){
+  const t = el('text', {x, y, 'font-size':size, fill, 'text-anchor':'middle', 'dominant-baseline':'central', 'font-weight':bold ? 700 : 500, class:'num pop'}, $(gid));
+  t.textContent = txt; return t;
+}
+function clearG(id){ const g = $(id); g.style.opacity = 0; later(() => { g.innerHTML = ''; g.style.opacity = 1; }, 750); }
+const ptsStr = P => P.map(p => p.join(',')).join(' ');
+const cen = t => [(t[0][0]+t[1][0]+t[2][0])/3, (t[0][1]+t[1][1]+t[2][1])/3];
+
+/* Flip a polygon over the hinge line AB: each vertex's distance from the hinge goes 1 → cos → -1,
+   which reads as the shape turning over about the common edge. Returns the landed points. */
+function flipPoly(poly, pts, A, B, dur){
+  const dx = B[0]-A[0], dy = B[1]-A[1], dd = dx*dx + dy*dy;
+  const parts = pts.map(P => { const t = ((P[0]-A[0])*dx + (P[1]-A[1])*dy) / dd; const F = [A[0]+t*dx, A[1]+t*dy]; return {F, v:[P[0]-F[0], P[1]-F[1]]}; });
+  const base = +(poly.dataset.fo || .6);
+  dur /= SPEED;
+  if(MODE === 'fast'){
+    const fin = parts.map(p => [Math.round(p.F[0] - p.v[0]), Math.round(p.F[1] - p.v[1])]);
+    poly.setAttribute('points', ptsStr(fin)); poly.setAttribute('fill-opacity', base);
+    return guard(Promise.resolve(fin));
+  }
+  return guard(new Promise(res => {
+    const t0 = performance.now();
+    function step(now){
+      const u = Math.min(1, (now - t0) / dur);
+      const e = u < .5 ? 2*u*u : 1 - Math.pow(-2*u + 2, 2) / 2;
+      const c = Math.cos(Math.PI * e), s = Math.sin(Math.PI * e);
+      // true 3D turn about the hinge: the far edge lifts toward the viewer (z) and is drawn in perspective
+      poly.setAttribute('points', parts.map(p => {
+        const z = Math.hypot(p.v[0], p.v[1]) * s, k = 1100 / (1100 - z);
+        const x = p.F[0] + p.v[0]*c, y = p.F[1] + p.v[1]*c;
+        return (240 + (x - 240) * k).toFixed(2) + ',' + (240 + (y - 240) * k).toFixed(2);
+      }).join(' '));
+      poly.setAttribute('fill-opacity', (base * (.35 + .65 * Math.abs(c))).toFixed(3));
+      if(u < 1) requestAnimationFrame(step); else res(parts.map(p => [Math.round(p.F[0] - p.v[0]), Math.round(p.F[1] - p.v[1])]));
+    }
+    requestAnimationFrame(step);
+  }));
+}
+
+/* ---------- html tokens (fractions, symbols) ---------- */
+const F = (n, d) => `<span class="fr"><span>${n}</span><i></i><span>${d}</span></span>`;
+const QQ = `<span class="fr"><span class="qb">?</span><i></i><span class="qb">?</span></span>`;
+const QBOX = `<span class="qb">?</span>`;
+const toks = {};
+function tok(name, {html, x, y, from, color, size, hide} = {}){
+  if(x != null && x >= 1000){ x += G.pdx; y += G.pdy; }      // panel coordinates → current orientation
+  let e = toks[name];
+  if(!e){
+    e = document.createElement('div'); e.className = 'tok';
+    const p = from || [x, y];
+    e.style.left = p[0] + 'px'; e.style.top = p[1] + 'px'; e.style.opacity = from ? 1 : 0;
+    if(size) e.style.fontSize = size + 'px'; if(color) e.style.color = color;
+    e.innerHTML = html || '';
+    stage.insertBefore(e, $('speech')); toks[name] = e; void e.offsetWidth;
+  }
+  if(html != null) e.innerHTML = html;
+  if(color) e.style.color = color;
+  if(size) e.style.fontSize = size + 'px';
+  if(x != null){ e.style.left = x + 'px'; e.style.top = y + 'px'; }
+  e.style.opacity = hide ? 0 : 1;
+  return e;
+}
+function untok(...names){ names.forEach(n => { const e = toks[n]; if(!e) return; delete toks[n]; e.style.opacity = 0; later(() => e.remove(), 700); }); }
+/* A count label (in the figure) flies across and becomes a digit of the answer fraction. */
+async function flyInto(srcEl, targetId, size){
+  const tgt = $(targetId);
+  if(MODE !== 'fast' && srcEl){
+    const f = document.createElement('div'); f.className = 'tok fly';
+    const [x0, y0] = stagePos(srcEl), [x1, y1] = stagePos(tgt);
+    f.textContent = srcEl.textContent; f.style.left = x0 + 'px'; f.style.top = y0 + 'px'; f.style.fontSize = '22px'; f.style.opacity = 1;
+    stage.insertBefore(f, $('speech')); void f.offsetWidth;
+    f.style.left = x1 + 'px'; f.style.top = y1 + 'px'; f.style.fontSize = size + 'px'; f.style.color = C.gold;
+    await sleep(900);
+    f.style.opacity = 0; setTimeout(() => f.remove(), 400);
+  }
+  tgt.classList.add('lit');
+}
+let holderN = 0;
+/* Holder stamp: when a holder's fraction OF THE WHOLE is found, that label sits on the shape for a moment.
+   The closing chain replays these same stamps in the same places, so the ending is recognition, not new information. */
+function holder(n, d, color, [x, y], ms = 2200){
+  const name = 'hold' + (++holderN), L = CUR;
+  const e = tok(name, {html:F(n, d), x:L.left + L.size * x / 480, y:L.top + L.size * y / 480, color, size:28});
+  e.classList.add('lbl');
+  later(() => untok(name), ms / SPEED);
+}
+const figPt = ([x, y]) => [CUR.left + CUR.size * x / 480, CUR.top + CUR.size * y / 480];
+const HOLDER_POS = () => ({whole:[64,36], quad:[300,60], shape:R === ROUTES.vert ? [420,120] : [318,198], tiny:cen(S.tiny || [[360,120],[480,0],[480,120]])});
+function stagePos(e){ const r = e.getBoundingClientRect(), s = stage.getBoundingClientRect(), k = s.width / G.W; return [(r.left + r.width/2 - s.left)/k, (r.top + r.height/2 - s.top)/k]; }
+
+/* ---------- choices & gates ---------- */
+function makeChips(defs, top, {col = false, cls = ''} = {}){
+  const box = document.createElement('div'); box.className = 'chips' + (col ? ' col' : ''); box.style.top = (top + G.pdy) + 'px';
+  const items = defs.map(d => { const b = document.createElement('button'); b.className = 'chip ' + cls; b.innerHTML = d.html; box.appendChild(b); return {el:b, ok:!!d.ok, why:d.why}; });
+  stage.insertBefore(box, $('speech'));
+  requestAnimationFrame(() => box.style.opacity = 1);
+  return {box, items};
+}
+function dropChips(ch){ ch.box.style.opacity = 0; later(() => ch.box.remove(), 600); }
+function chipDone(ch, it){ ch.items.forEach(i => { i.el.classList.add(i === it ? 'ok' : 'off'); i.el.disabled = true; }); }
+const okChip = ch => ch.items.find(i => i.ok).el;
+function flashBad(e){ e.classList.remove('bad'); void e.getBoundingClientRect(); e.classList.add('bad'); setTimeout(() => e.classList.remove('bad'), 750); }
+const NUDGES = ['Not quite… have another look.', 'Hmm, try again – look carefully.'];
+
+/* Waits for the right tap. Wrong → red shake + spoken nudge; after 2 misses the answer is shown. */
+const answers = [];                 // answers[beat][k] = index of the item chosen at that step's k-th gate
+let gateIdx = 0;
+function gate(items, {reveal = 'Here it is – take a look.'} = {}){
+  const rec = (answers[bi] ||= []), k = gateIdx++;
+  const recorded = () => items[rec[k]] || items.find(i => i.ok);
+  if(MODE === 'fast') return guard(Promise.resolve(recorded()));
+  if(MODE === 'review') return guard(speechIdle().then(() => new Promise(r => setTimeout(r, 350))).then(recorded));
+  return guard(new Promise(res => {
+    let misses = 0, done = false, revealed = false;
+    const finish = it => { if(done) return; done = true; rec[k] = items.indexOf(it); items.forEach(i => i.el.removeEventListener('click', i._h)); res(it); };
+    items.forEach(it => {
+      it._h = () => {
+        if(done) return;
+        if(it.ok || it.alt){ finish(it); return; }
+        if(revealed) return;
+        misses++; flashBad(it.el);
+        if(misses >= 2){
+          revealed = true;
+          const c = items.find(i => i.ok); c.el.classList.add('hint');
+          // name this pick's error, then show the answer
+          say((it.why ? it.why + ' ' : '') + reveal, {hold:250}).then(() => { c.el.classList.remove('hint'); finish(c); });
+        } else say(it.why ? it.why + ' Try again.' : NUDGES[misses - 1], {hold:0});
+      };
+      it.el.addEventListener('click', it._h);
+    });
+    if(AUTO) setTimeout(() => finish((qs.get('auto') === 'vert' && items.find(i => i.alt)) || items.find(i => i.ok)), 900 / SPEED);
+  }));
+}
+function hit(points, ok, cls = '', why = ''){
+  const e = el('polygon', {points, class:'hit ' + cls}, $('hits'));
+  return {el:e, ok, why, pts:points.split(' ').map(p => p.split(',').map(Number))};
+}
+function clearHits(){ $('hits').innerHTML = ''; }
+
+/* ---------- the 32 tiny triangles ---------- */
+const key = p => p[0] + ',' + p[1];
+const shared = (a, b) => a.filter(p => b.some(q => key(q) === key(p)));
+function buildTris(){
+  const T = [];
+  for(const cx of [120, 360]) for(const cy of [120, 360]){
+    const h = 120, c = [cx, cy];
+    const k = [[cx-h,cy-h],[cx+h,cy-h],[cx+h,cy+h],[cx-h,cy+h]];
+    const m = [[cx,cy-h],[cx+h,cy],[cx,cy+h],[cx-h,cy]];
+    for(let i = 0; i < 4; i++){ T.push([c, m[i], k[i]]); T.push([c, m[i], k[(i+1)%4]]); }
+  }
+  return T;
+}
+function hamPath(T, s){            // one unbroken walk of edge-to-edge flips through all 32
+  const n = T.length;
+  const adj = T.map((a, i) => T.map((b, j) => j).filter(j => j !== i && shared(T[i], T[j]).length === 2));
+  const used = new Array(n).fill(false), path = [s]; used[s] = true; let steps = 0;
+  const free = j => adj[j].filter(k => !used[k]).length;
+  function dfs(){
+    if(path.length === n) return true;
+    if(++steps > 200000) return false;
+    const c = path[path.length - 1];
+    for(const j of adj[c].filter(j => !used[j]).sort((a, b) => free(a) - free(b))){
+      used[j] = true; path.push(j);
+      if(dfs()) return true;
+      path.pop(); used[j] = false;
+    }
+    return false;
+  }
+  if(dfs()){ const mv = []; for(let i = 1; i < n; i++) mv.push([path[i-1], path[i]]); return mv; }
+  // fallback: breadth-first, each new triangle flips out of a neighbour already placed
+  const seen = new Set([s]), q = [s], mv = [];
+  while(q.length){ const a = q.shift(); for(const b of adj[a]) if(!seen.has(b)){ seen.add(b); q.push(b); mv.push([a, b]); } }
+  return mv;
+}
+function stamp(t, n){
+  el('polygon', {points:ptsStr(t), class:'stamp'}, $('stamps'));
+  const [x, y] = cen(t);
+  return popText('stampNums', x, y, n, {size:15, fill:'#d6f2ff', bold:1});
+}
+async function fill32(startPts){
+  const T = buildTris();
+  const kk = t => t.map(key).sort().join('|');
+  let s = T.findIndex(t => kk(t) === kk(startPts)); if(s < 0) s = 0;
+  const moves = hamPath(T, s);
+  const mv = $('mover');
+  mv.setAttribute('points', ptsStr(T[s])); show('mover'); stamp(T[s], 1);
+  await sleep(700);
+  let i = 0, last = null;
+  for(const [a, b] of moves){
+    const ax = shared(T[a], T[b]);
+    const dur = Math.max(85, 430 * Math.pow(.86, i));
+    await flipPoly(mv, T[a], ax[0], ax[1], dur);
+    i++; last = stamp(T[b], i + 1);
+  }
+  await sleep(300);
+  show('mover', 0);
+  return last;                                  // the "32" label
+}
+
+/* ---------- the beats (storyboard slides → applet steps) ---------- */
+const S = {};
+let DX, DY;
+function recalcDock(){ [DX, DY] = G.dock(LAYOUTS.main); }
+recalcDock();                       // docking spot beside the little square
+
+/* Two valid halves of the little square hold the striped part:
+   the slanted line (triangle half) and the vertical line (rectangle half).
+   Both split into 3 parts → the square part splits → 4 equal tiny triangles → 1/8 × 3/4. */
+const ROUTES = {
+  diag: {
+    shape:'triangle', cut:'slanted', half:'bottom',
+    shade:[[240,0],[480,0],[240,240]], hinge:[[240,240],[480,0]], n1:[312,72], n2:[418,168],
+    green:'240,240 480,0 480,240',
+    partLines:[[360,120,360,240],[360,120,480,120]],
+    partNums:[[318,202],[420,180],[442,78]],                 // 1 tri, 2 square, 3 tri
+    wrongParts:['240,240 360,120 360,240', '360,120 480,0 480,120'],
+    tiny:[[[240,240],[360,120],[360,240]], [[360,120],[360,240],[480,240]], [[360,120],[480,120],[480,240]], [[360,120],[480,0],[480,120]]],
+    axes:[[[360,120],[360,240]], [[360,120],[480,240]], [[360,120],[480,120]]],
+  },
+  vert: {
+    shape:'rectangle', cut:'vertical', half:'right',
+    shade:[[240,0],[360,0],[360,240],[240,240]], hinge:[[360,0],[360,240]], n1:[300,60], n2:[420,180],
+    green:'360,0 480,0 480,240 360,240',
+    partLines:[[360,120,480,120],[360,120,480,0]],
+    partNums:[[398,42],[420,180],[444,84]],                  // 1 tri, 2 square, 3 tri
+    wrongParts:['360,0 480,0 360,120', '360,120 480,0 480,120'],
+    tiny:[[[360,0],[480,0],[360,120]], [[360,120],[480,0],[480,120]], [[360,120],[480,120],[480,240]], [[360,120],[360,240],[480,240]]],
+    axes:[[[360,120],[480,0]], [[360,120],[480,120]], [[360,120],[480,240]]],
+  },
+};
+let R = ROUTES.diag;
+const beats = [
+  // S1 → S2: question with the full figure, then the figure slides left
+  async () => { layout('intro'); await sleep(1300); layout('main'); await sleep(1100); },
+  async () => { await say('The question asks us to find a fraction…'); },
+  // S3: the whole
+  async () => { emph('wWhole'); lines(['L_out']); show('gWhole'); holder(1, 1, '#FFE14D', HOLDER_POS().whole, 2600); await say('This is the whole – a square.'); },
+  // S4: the part
+  async () => { emph('wStriped'); show('gWhole', 0); show('gStripe'); lines([]); await say('This is the part we consider – the striped shape.'); },
+  // S5: the fraction = part compared to whole
+  async () => { emph('wFraction'); show('gWhole'); await say('This is the fraction we need – the region covered by the striped portion, compared to the whole square.'); },
+  // S6: all lines back
+  async () => { emph(null); show('gWhole', 0); show('gStripe', 0); lines('all'); await say('There are other lines given, which might be just to trick us…'); },
+  // S7: fade the distractors
+  async () => { lines(['L_out','L_qv','L_qh']); show('stripeEdge'); await say("Let's fade them away, and look for easy ways to get to the striped part from the whole…"); },
+  // S8: little square vs whole → tap 1/4
+  async () => {
+    show('stripeEdge', 0); $('header').classList.add('dim'); show('gQuad');
+    subq('What part of the whole square is the little square?', 262);
+    const ch = makeChips([{html:F(1,4), ok:1},
+      {html:F(1,2), why:'If it were a half, just two of them would cover the whole square – and two leave a gap.'},
+      {html:F(1,8), why:"If it were an eighth, it would take eight of them – but it's much bigger than that."}], 410);
+    say('Look at the little square – can you guess how it compares to the whole square? Tap your guess…');
+    const it = await gate(ch.items, {reveal:"It's one fourth – watch."}); chipDone(ch, it); S.ch = ch;
+  },
+  // S9–S12: the little square stays put (1); a copy of it unfolds over shared edges to fill the whole (2, 3, 4)
+  async () => {
+    const qStamp = P => el('polygon', {points:ptsStr(P), fill:'rgba(255,192,0,.12)', stroke:'#FFC000', 'stroke-width':3, 'stroke-linejoin':'round'}, $('qNums'));
+    const sp = say('Right! Four of the small ones make the whole square, so it is a fourth!');
+    let P = [[240,0],[480,0],[480,240],[240,240]];
+    qStamp(P); popText('qNums', 305, 72, 1, {size:32, fill:C.gold});
+    const mv = $('qMover'); mv.setAttribute('points', ptsStr(P)); mv.setAttribute('fill-opacity', .42); show('qMover');
+    const unfold = [
+      {hinge:[[240,0],[240,240]],   num:[80,135]},    // over the left edge  → top-left
+      {hinge:[[0,240],[240,240]],   num:[60,365]},    // over the bottom edge → bottom-left
+      {hinge:[[240,240],[240,480]], num:[395,350]},   // over the right edge → bottom-right
+    ];
+    for(let i = 0; i < unfold.length; i++){
+      await sleep(i ? 200 : 500);
+      P = await flipPoly(mv, P, unfold[i].hinge[0], unfold[i].hinge[1], 1150);
+      qStamp(P); popText('qNums', ...unfold[i].num, i + 2, {size:32, fill:C.gold});
+    }
+    show('qMover', 0);
+    await sp;
+  },
+  // S13: 1/4 docks beside the little square
+  async () => {
+    const hq = figPt(HOLDER_POS().quad);
+    const q = tok('q', {html:F(1,4), from:stagePos(okChip(S.ch)), x:hq[0], y:hq[1], color:'#FFE14D', size:28}); q.classList.add('lbl');
+    dropChips(S.ch); subq(null); show('gQuad', 0); show('qGrid', 0); clearG('qNums'); show('qBox');
+    await sleep(1700);                                   // the 1/4 sits on its holder: the stamp
+    q.classList.remove('lbl'); tok('q', {x:DX, y:DY, color:C.gold, size:40});   // …then is carried aside as the working value
+    await sleep(900);
+  },
+  // S14: tap the half-line that fits the striped part
+  async () => {
+    subq('Tap the correct half-line of the small square that fits the striped part in it.', 340);
+    show('halfLines');
+    say("Now, let's find a part of the square that completely fits the striped region.");
+    const WHY = {hlH:'The flat line cuts across the stripes – they spill into both halves.', hlD:'That diagonal cuts through the stripes – some land on each side.'};
+    const items = ['hlH','hlV','hlD','hlA'].map(id => ({el:$(id), ok:id === 'hlA', alt:id === 'hlV', why:WHY[id]}));
+    const it = await gate(items, {reveal:"The slanted line works – it runs right along the striped part's edge."});
+    R = it.alt ? ROUTES.vert : ROUTES.diag;      // vertical line is a valid route of its own
+    it.el.classList.add('good');
+  },
+  // S15 → S16: the empty half flips about the chosen line onto the striped half
+  async () => {
+    subq(null); ['hlH','hlV','hlD','hlA'].forEach(id => { if(!$(id).classList.contains('good')) $(id).style.opacity = 0; });
+    const tri = $('shadeTri'); tri.setAttribute('points', ptsStr(R.shade)); tri.setAttribute('fill-opacity', .78); show('shadeTri');
+    popText('halfNums', ...R.n1, '1', {size:30});
+    const sp = say(`Right, this ${R.cut} line cuts the small square in two! The striped part is in the ${R.half} half!`);
+    await sleep(1800);
+    await flipPoly(tri, R.shade, R.hinge[0], R.hinge[1], 1100);
+    popText('halfNums', ...R.n2, '2', {size:30});
+    await sp;
+  },
+  // S17: two fractions found
+  async () => {
+    show('shadeTri', 0); clearG('halfNums'); show('halfLines', 0); show('qBox', 0);
+    $('greenTri').setAttribute('points', R.green); show('greenTri');
+    tok('comma', {html:',', x:DX + 32, y:DY + 14, size:40});
+    tok('h', {html:F(1,2), x:DX + 64, y:DY, color:C.green, size:40});
+    await say('We have 2 fractions from the whole square that we identified…');
+  },
+  // S18: which operation?
+  async () => {
+    untok('comma');
+    tok('q', {x:1110, y:470}); tok('box', {html:QBOX, x:1210, y:470, size:40}); tok('h', {x:1310, y:470});
+    subq('Which operation joins them?', 330);
+    const WHY = {'+':`Adding makes it bigger than a fourth – but the ${R.shape} sits inside the fourth, so it must be smaller.`,
+                 '–':'A fourth take away a half is less than nothing! We want half OF a fourth.',
+                 '÷':`Dividing by a half doubles the fourth – too big for a ${R.shape} that sits inside it.`};
+    const ch = makeChips(['+','×','–','÷'].map(s => ({html:s, ok:s === '×', why:WHY[s]})), 590, {cls:'op'});
+    say(`What is the size of this ${R.shape} which has the striped region inside it? Which symbol applies?`);
+    const it = await gate(ch.items, {reveal:'We multiply – half OF a fourth.'}); chipDone(ch, it); S.ch = ch;
+  },
+  // S19 → S20
+  async () => {
+    await say("That's right… we multiply…");
+    dropChips(S.ch); subq(null); untok('box');
+    tok('x', {html:'×', x:1210, y:470, size:40}); tok('q', {x:1140, y:470}); tok('h', {x:1280, y:470});
+    await say(`The ${R.shape} is half of a fourth of the square…`);
+  },
+  // S21: = ?/?
+  async () => {
+    show('blueWhole');
+    tok('q', {x:1050, y:440}); tok('x', {x:1110, y:440}); tok('h', {x:1170, y:440});
+    tok('eq', {html:'=', x:1235, y:440, size:40}); tok('qq', {html:QQ, x:1312, y:440, size:40});
+    const ch = makeChips([
+      {html:F(2,6), why:`That adds the tops and the bottoms. Two sixths is more than a fourth – but the ${R.shape} sits inside the fourth, so it must be less.`},
+      {html:F(1,8), ok:1},
+      {html:F(1,6), why:'That adds the bottom numbers. Halving a fourth makes eighths – two eighths make one fourth.'}], 580);
+    say('How much is that?');
+    const it = await gate(ch.items, {reveal:'One times one is one, four times two is eight – one eighth.'}); chipDone(ch, it); S.ch = ch;
+  },
+  // S22 → S23: 1/8, then it docks
+  async () => {
+    untok('qq'); tok('e8', {html:F(1,8), from:stagePos(okChip(S.ch)), x:1312, y:440, color:C.green, size:40}); dropChips(S.ch);
+    await say(`Correct! The ${R.shape} is one eighth of the whole square.`);
+    show('blueWhole', 0); untok('q','x','h','eq');
+    const h8 = figPt(HOLDER_POS().shape);
+    const e8 = tok('e8', {x:h8[0], y:h8[1], color:'#B6F27A', size:28}); e8.classList.add('lbl');   // stamp on its holder
+    await sleep(1800);
+    e8.classList.remove('lbl'); tok('e8', {x:DX, y:DY, color:C.green, size:40});
+    await sleep(900);
+  },
+  // S24: three parts – thirds?
+  async () => {
+    show('hatchG', 0);
+    const pl = $('partLines'); pl.innerHTML = '';
+    R.partLines.forEach(([x1, y1, x2, y2]) => el('line', {x1, y1, x2, y2}, pl));
+    show('partLines');
+    R.partNums.forEach(([x, y], i) => popText('partNums', x, y, i + 1, {size:28, fill:C.gold}));
+    subq('Are each of the parts a third?', 330);
+    const ch = makeChips([{html:'Yes – 3 parts, each a third', why:'Thirds need three EQUAL parts. Is part 2 the same size as part 1?'}, {html:'No – the parts are unequal', ok:1}], 410, {col:true, cls:'txt'});
+    say(`Now, the given question seems to split the ${R.shape} into 3 parts. Does that mean each part is a third?`);
+    const it = await gate(ch.items, {reveal:'Look – part 2 is bigger than the others, so they are not equal.'}); chipDone(ch, it); S.ch = ch;
+  },
+  // S25
+  async () => { await say('Good eye… Thirds mean equal parts – and one of the parts is bigger than the others.'); },
+  // S26: tap the bigger part
+  async () => {
+    dropChips(S.ch); subq(null); clearG('partNums');
+    const hs = [hit('360,120 480,120 480,240 360,240', true), ...R.wrongParts.map(p => hit(p, false, '', "That's one of the small triangles. Find the part that could hold two of them."))];
+    say('Tap the bigger part – we will check if it can be broken down into the size of the other two…');
+    await gate(hs, {reveal:"It's the square part – the biggest one."}); clearHits();
+  },
+  // S27–S31: tiny triangle flips edge-to-edge across the four spots
+  async () => {
+    show('sqDiag');
+    const T = R.tiny, axes = R.axes;
+    const hi = $('tinyHi'); hi.setAttribute('points', ptsStr(T[0])); hi.setAttribute('fill-opacity', .6); show('tinyHi');
+    const sp = say(`See – 4 equal sized tiny triangles make up the green ${R.shape}!`);
+    popText('tinyNums', ...cen(T[0]), 1, {size:24, fill:C.gold});
+    let p = T[0];
+    for(let i = 0; i < 3; i++){
+      await sleep(450);
+      p = await flipPoly(hi, p, axes[i][0], axes[i][1], 750);
+      popText('tinyNums', ...cen(T[i+1]), i + 2, {size:24, fill:C.gold});
+    }
+    await sp; await sleep(300); show('tinyHi', 0);
+  },
+  // S32 → S33: striped = 3/4 of green triangle
+  async () => {
+    clearG('tinyNums'); show('hatchG');
+    subq(`What part of the green ${R.shape} is the striped part?`, 340);
+    const ch = makeChips([
+      {html:F(1,4), why:'One fourth would be just one tiny triangle – count the striped ones.'},
+      {html:F(3,4), ok:1},
+      {html:F(3,8), why:`Eighths would mean eight equal pieces – the green ${R.shape} has only four.`}], 480);
+    say(`Now – the striped region is made of the little triangles! How much of the green ${R.shape} is the striped part?`);
+    const it = await gate(ch.items, {reveal:'Three of the four tiny triangles are striped – three fourths.'}); chipDone(ch, it); S.ch = ch;
+    await say(`Super, a simple fraction – the striped region is three fourths of the green ${R.shape}.`);
+  },
+  // S34: 3/4 OF 1/8
+  async () => {
+    tok('x2', {html:'×', x:DX + 44, y:DY, size:36});
+    tok('q34', {html:F(3,4), from:stagePos(okChip(S.ch)), x:DX + 88, y:DY, color:C.gold, size:40});
+    dropChips(S.ch); subq(null); show('partLines', 0); show('sqDiag', 0); show('goldStripe');
+    await say(`Three fourths OF the green ${R.shape}…`);
+  },
+  // S35: multiply again → ?/?
+  async () => {
+    show('greenTri', 0); show('blueWhole');
+    tok('e8', {x:1050, y:440}); tok('x2', {x:1110, y:440, size:40}); tok('q34', {x:1170, y:440});
+    tok('eq2', {html:'=', x:1235, y:440, size:40}); tok('qq2', {html:QQ, x:1315, y:440, size:40});
+    const ch = makeChips([
+      {html:F(4,12), why:`That adds the tops and the bottoms. Four twelfths is a third – far bigger than the ${R.shape} the stripes sit inside.`},
+      {html:F(3,12), why:`That adds the bottom numbers. Three twelfths is a fourth – but the stripes sit inside the one-eighth ${R.shape}, so the answer must be smaller than an eighth.`},
+      {html:F(3,32), ok:1}], 580);
+    say('So we multiply the fractions again, just like last time, to get the fraction of the whole square! How much is that?');
+    const it = await gate(ch.items, {reveal:'One times three is three, eight times four is thirty-two.'}); chipDone(ch, it); S.ch = ch;
+  },
+  // S36
+  async () => {
+    untok('qq2'); tok('ans', {html:F(3,32), from:stagePos(okChip(S.ch)), x:1318, y:440, color:C.gold, size:40}); dropChips(S.ch);
+    await say('Great! By breaking the big question down into tiny pieces…');
+  },
+  // S37: back to the original figure with the answer
+  async () => {
+    untok('e8','x2','q34','eq2'); tok('ans', {x:1210, y:250, size:56});
+    show('blueWhole', 0); show('goldStripe', 0); $('header').classList.remove('dim'); lines('all');
+    await say('…and using some simple operations on fractions, we found the answer!');
+  },
+  // S38: verify – tap a tiny triangle
+  async () => {
+    const bg = hit('0,0 480,0 480,480 0,480', false, 'nohover', "That's bigger than a tiny triangle – look inside the little square.");
+    const hs = ['360,0 480,0 360,120', '360,120 480,0 480,120', '240,120 360,120 240,240', '240,240 360,120 360,240'].map(p => hit(p, true));
+    say("Let's verify our answer… In the given figure, the smallest piece we used was the tiny triangle. Tap a tiny triangle…");
+    const it = await gate([bg, ...hs], {reveal:'Here is one – inside the little square.'}); clearHits(); S.tiny = it.pts;
+  },
+  // S39–S41: the tiny triangle flips across the whole square, 32 times
+  async () => {
+    lines([], .16); show('hatchG', .3);
+    // the answer fades to a ghost; the counts will rebuild it
+    tok('ans', {html:`<span class="fr"><span id="ansN" class="ph">3</span><i></i><span id="ansD" class="ph">32</span></span>`});
+    const sp = say('This goes 32 times in the bigger square…');
+    const last = await fill32(S.tiny);
+    await flyInto(last, 'ansD', 56);              // the 32nd count becomes the denominator
+    await sp;
+  },
+  // S42: 3 of those pieces are striped
+  async () => {
+    show('hatchG'); $('stamps').classList.add('settled'); clearG('stampNums');
+    const sp = say("And 3 of these equal pieces make the striped region. That's the fraction three thirty-seconds!");
+    await sleep(500); holder(1, 32, '#BFEAFF', HOLDER_POS().tiny, 1800); await sleep(900);
+    const st = [[[360,120],[480,0],[480,120]], [[360,120],[480,120],[480,240]], [[360,120],[360,240],[480,240]]];
+    let three = null;
+    for(let i = 0; i < 3; i++){ await sleep(650); el('polygon', {points:ptsStr(st[i]), class:'goldTri pop'}, $('finalG')); three = popText('finalNums', ...cen(st[i]), i + 1, {size:24, fill:C.gold}); }
+    await sleep(350);
+    await flyInto(three, 'ansN', 56);             // the striped count becomes the numerator
+    await sp;
+  },
+  // S43: wrap-up
+  async () => {
+    clearG('stamps'); clearG('finalG'); clearG('finalNums'); lines('all'); show('hatchG');
+    layout('outro'); tok('ans', {x:CUR.left + CUR.size + 49, y:CUR.top + CUR.size / 4, size:44});
+    await sleep(1000);
+    // while the line is said, walk the chain of wholes: outer square → little square → triangle/rectangle, each with the striped part
+    const line = 'In most such challenges, you need to make helping divisions, and look for easy fractions that make the required shape…';
+    ['gGreenBlur','gGreenLine'].forEach(id => $(id).setAttribute('points', R.green));
+    if(S.tiny) $('gUnit').querySelectorAll('polygon').forEach(p => p.setAttribute('points', ptsStr(S.tiny)));
+    const HP = HOLDER_POS();
+    const sp = say(line);
+    const L = LAYOUTS.outro, at = (x, y) => [L.left + L.size * x / 480, L.top + L.size * y / 480];
+    const label = (name, n, d, color, [x, y]) => { const e = tok(name, {html:F(n, d), x, y, color, size:28}); e.classList.add('lbl'); };
+    // each highlight brings its labelling fraction; the previous one fades as the next arrives
+    const steps = [
+      {glow:'gWhole', lbl:[1, 1,  '#FFE14D'], pos:HP.whole},                                        // whole square
+      {glow:'gQuad',  lbl:[1, 4,  '#FFE14D'], pos:HP.quad},                                         // little square
+      {glow:'gGreen', lbl:[1, 8,  '#B6F27A'], pos:HP.shape},       // triangle / rectangle
+      {glow:'gUnit',  lbl:[1, 32, '#BFEAFF'], pos:HP.tiny},                                         // one tiny triangle
+    ];
+    const step = Math.max(1200, est(line) * SPEED / steps.length);
+    show('gStripe');
+    for(let i = 0; i < steps.length; i++){
+      if(i){ show(steps[i-1].glow, 0); untok('lbl' + (i-1)); }
+      show(steps[i].glow); label('lbl' + i, ...steps[i].lbl, at(...steps[i].pos));
+      await sleep(step);
+    }
+    await sp;
+    await sleep(500);
+    show(steps[steps.length-1].glow, 0); show('gStripe', 0); untok('lbl' + (steps.length-1));
+    $('bRestart').classList.add('glow');
+  },
+];
+
+/* ---------- running, and stepping back / forward ---------- */
+let bi = 0;          // beat being executed
+let vi = 0;          // beat on screen
+let frontier = 0;    // first beat not yet completed in the live flow (beats.length = all done)
+
+function updateNav(){
+  const review = MODE === 'review';
+  $('navL').classList.toggle('show', vi > 0);
+  $('navR').classList.toggle('show', review);
+  $('reviewTag').style.display = review ? 'block' : 'none';
+  $('prog').style.width = ((review ? vi + 1 : frontier) / beats.length * 100) + '%';
+}
+
+async function runLive(from){
+  const g = gen; MODE = 'live';
+  for(let b = from; b < beats.length; b++){
+    bi = vi = frontier = b; gateIdx = 0; updateNav();
+    try { await beats[b](); } catch(e){ if(e === ABORT) return; throw e; }
+    if(g !== gen) return;
+  }
+  frontier = beats.length; vi = beats.length - 1; updateNav();
+}
+
+function resetStage(){
+  stage.innerHTML = INIT;
+  $('start').style.display = 'none';
+  for(const k in toks) delete toks[k];
+  for(const k in S) delete S[k];
+  R = ROUTES.diag; lastText = '';
+  bindUI(); pickVoice();
+}
+
+/* Jump to step t: rebuild everything before it instantly (silent, recorded answers),
+   then either play t and HOLD there (review), or carry on with the normal flow (resume). */
+async function goTo(t, resume){
+  const g = ++gen;
+  abortSpeech(); resetStage();
+  MODE = 'fast'; stage.classList.add('instant');
+  try { for(let b = 0; b < t; b++){ bi = b; gateIdx = 0; await beats[b](); } }
+  catch(e){ if(e === ABORT) return; throw e; }
+  void stage.offsetWidth; stage.classList.remove('instant');
+  if(g !== gen) return;
+  if(resume){ runLive(t); return; }
+  MODE = 'review'; bi = vi = t; gateIdx = 0; updateNav();
+  $('navR').classList.remove('cue');
+  try { await beats[t](); } catch(e){ if(e === ABORT) return; throw e; }
+  if(g === gen) $('navR').classList.add('cue');      // held: nudge the › arrow
+}
+function navBack(){ if(vi > 0) goTo(vi - 1, false); }
+function navFwd(){
+  if(MODE !== 'review') return;
+  const t = vi + 1;
+  if(t < frontier) goTo(t, false);                    // still in the past: show it and hold
+  else if(frontier < beats.length) goTo(frontier, true); // caught up: resume the live flow
+}
+
+/* ---------- controls ---------- */
+function bindUI(){
+  $('bStart').onclick = () => {
+    pickVoice();
+    // unlock speech inside the click itself (Safari / strict autoplay policies drop later speak() calls otherwise)
+    if(hasTTS && !muted){ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); }
+    $('start').style.display = 'none';
+    runLive(0);
+  };
+  $('bReplay').onclick = () => { if(cur) speakToken(cur); else if(lastText) say(lastText, {hold:0}).catch(() => {}); };
+  $('bMute').onclick = () => {
+    muted = !muted;
+    $('bMute').textContent = muted ? '🔇 Sound off' : '🔊 Sound on';
+    if(muted && hasTTS){ speechSynthesis.cancel(); if(cur){ const tk = cur; tk.utt = null; clearTimeout(tk.tm); tk.tm = setTimeout(tk.finish, 1800); } }
+  };
+  $('bMute').textContent = muted ? '🔇 Sound off' : '🔊 Sound on';
+  $('bRestart').onclick = () => { if(hasTTS) speechSynthesis.cancel(); location.reload(); };
+  $('navL').onclick = navBack;
+  $('navR').onclick = navFwd;
+}
+bindUI();
+function placeIntro(){ stage.classList.add('instant'); layout('intro'); void stage.offsetWidth; stage.classList.remove('instant'); }
+placeIntro();
+addEventListener('resize', () => {
+  const k = wantGeom();
+  if(k !== GK){
+    GK = k; G = GEOMS[k]; LAYOUTS = G.LAYOUTS; applyGeom(); recalcDock();
+    if($('start').style.display === 'none'){
+      const live = MODE !== 'review' && frontier < beats.length;
+      goTo(live ? frontier : vi, live);
+    } else placeIntro();
+  }
+  fit();
+});
+addEventListener('keydown', e => {
+  if($('start').style.display !== 'none') return;
+  if(e.key === 'ArrowLeft') navBack();
+  if(e.key === 'ArrowRight') navFwd();
+});
+window.__dbg = {get beat(){ return bi; }, get view(){ return vi; }, get mode(){ return MODE; }, get frontier(){ return frontier; }, beats:beats.length, answers};
+</script>
+</body>
+</html>
