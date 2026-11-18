@@ -9,3 +9,5 @@ whole square → little square (1/4) → triangle or rectangle (1/8) → tiny tr
 - Two valid routes: the slanted or the vertical half-line of the little square.
 
 Test helpers: `?mute`, `?speed=3`, `?auto` (answers correctly), `?auto=vert` (takes the vertical route).
+
+**Feedback page:** [feedback.html](https://aswin-crgh.github.io/fraction-three-thirty-seconds/feedback.html) — this applet (C) compared with another version (A), as ten transferable rules shown on annotated screenshots.

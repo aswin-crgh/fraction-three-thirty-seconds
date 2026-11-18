@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Applet Feedback: A vs C</title>
+<meta name="description" content="Two narrated applets for one fraction problem, compared — ten rules that carry over to any figure-fraction applet.">
+<style>
+:root{
+  --bg:#f4f6f9; --card:#ffffff; --ink:#18202c; --muted:#5b6576; --rule:#e1e6ee;
+  --accent:#0f7c6e; --accent-soft:#e0f2ef;
+  --good:#f0a020; --bad:#e2456b; --teal:#14a6b8;
+  --a:#6b52c8; --a-soft:#eeeafb; --c:#0f7c6e; --c-soft:#e0f2ef;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.06);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1319; --card:#161d26; --ink:#e8ecf2; --muted:#9aa5b5; --rule:#273141;
+  --accent:#3fd0b8; --accent-soft:#12302c; --a:#b3a2ff; --a-soft:#231d3d; --c:#3fd0b8; --c-soft:#12302c;
+  --shadow:none }}
+:root[data-theme="dark"]{
+  --bg:#0e1319; --card:#161d26; --ink:#e8ecf2; --muted:#9aa5b5; --rule:#273141;
+  --accent:#3fd0b8; --accent-soft:#12302c; --a:#b3a2ff; --a-soft:#231d3d; --c:#3fd0b8; --c-soft:#12302c; --shadow:none }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 16px 64px}
+a{color:var(--accent)}
+.eyebrow{font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-size:clamp(1.7rem,4.6vw,2.6rem);line-height:1.1;margin:.2em 0 .25em;letter-spacing:-.01em}
+h2{font-size:1.25rem;margin:0 0 12px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;font-size:.92rem;padding:8px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--card);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--card)}
+.tag{display:inline-block;font-weight:800;font-size:.72rem;letter-spacing:.04em;padding:1px 7px;border-radius:6px;vertical-align:1px}
+.tag.a{background:var(--a-soft);color:var(--a)} .tag.c{background:var(--c-soft);color:var(--c)}
+section{margin-top:36px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+
+/* scorecard */
+.score{display:grid;grid-template-columns:auto auto 1fr;gap:0;border-radius:14px;overflow:hidden;border:1px solid var(--rule);background:var(--card)}
+.score>div{padding:10px 12px;border-top:1px solid var(--rule);font-size:.93rem}
+.score>div:nth-child(-n+3){border-top:0}
+.score .k{font-weight:600}
+.score .w{white-space:nowrap}
+.score .y{color:var(--muted)}
+.win{display:inline-block;font-weight:800;font-size:.78rem;padding:2px 9px;border-radius:999px}
+.win.c{background:var(--c-soft);color:var(--c)} .win.split{background:var(--rule);color:var(--ink)}
+@media (max-width:560px){ .score{grid-template-columns:auto 1fr} .score .y{grid-column:1/-1;border-top:0;padding-top:0;font-size:.85rem} }
+
+/* rule chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips a{text-decoration:none;font-size:.86rem;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:5px 11px}
+.chips a b{color:var(--accent);margin-right:4px}
+
+/* rule cards */
+.rule{margin-top:14px;scroll-margin-top:12px}
+.rule h3{margin:0;font-size:1.08rem;display:flex;gap:10px;align-items:baseline}
+.rule h3 .n{font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;min-width:1.4em}
+.rule .why{color:var(--muted);margin:2px 0 12px;font-size:.95rem}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.pair.form{grid-template-columns:3.85fr 1fr}
+.one{max-width:760px}
+@media (max-width:560px){ .pair{gap:6px} }
+
+figure{margin:0}
+.frame{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--rule);background:#0b1a26;line-height:0}
+.frame img{width:100%;height:auto;display:block}
+.frame svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ring{fill:none;stroke-width:3.5;vector-effect:non-scaling-stroke;rx:14}
+.ring.good{stroke:var(--good)} .ring.bad{stroke:var(--bad)} .ring.teal{stroke:var(--teal)}
+.ring.dash{stroke-dasharray:9 6}
+.glowline{stroke:#5fe08a;stroke-width:22;stroke-linecap:round;opacity:.55}
+.arrow{fill:none;stroke:var(--good);stroke-width:4;vector-effect:non-scaling-stroke}
+.badge{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 system-ui,sans-serif;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.badge.ok{background:#1f9d55} .badge.no{background:var(--bad)}
+@media (max-width:560px){ .badge{width:16px;height:16px;font-size:10px} .ring{stroke-width:2.5} }
+figcaption{font-size:.86rem;color:var(--muted);margin-top:6px;line-height:1.35}
+figcaption .tag{margin-right:5px}
+@media (max-width:560px){ figcaption{font-size:.74rem} }
+
+/* lists */
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.mini .card{padding:12px 14px}
+.mini b{display:block;font-size:.95rem}
+.mini span{color:var(--muted);font-size:.88rem}
+.swap{display:grid;grid-template-columns:1fr auto 1fr;gap:4px 10px;align-items:center;font-size:.92rem}
+.swap .from{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--bad)}
+.swap .to{font-weight:600}
+.swap .ar{color:var(--accent);font-weight:800}
+.swap>div{padding:7px 0;border-top:1px solid var(--rule)}
+.swap>div:nth-child(-n+3){border-top:0}
+@media (max-width:560px){ .swap{font-size:.84rem} }
+footer{margin-top:40px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Feedback · What fraction of the whole square is striped?</div>
+  <h1>A vs C: what made the difference</h1>
+  <p class="lead">Two narrated applets for the same problem. <span class="tag a">A</span> is another team's; <span class="tag c">C</span> is ours. Ten rules came out of comparing them — each one shown on the screens, not just told.</p>
+  <div class="btns">
+    <a class="btn primary" href="./">Try C ↗</a>
+    <a class="btn" href="https://github.com/aswin-crgh/fraction-three-thirty-seconds">Repo ↗</a>
+  </div>
+</header>
+
+<section>
+  <h2>Scorecard</h2>
+  <div class="score">
+    <div class="k">Pedagogy</div><div class="w"><span class="win c">C · narrow</span></div><div class="y">Learner makes the key moves; A is better after repeated failure.</div>
+    <div class="k">Visual</div><div class="w"><span class="win c">C</span></div><div class="y">One frame; motion carries meaning.</div>
+    <div class="k">Cognitive load</div><div class="w"><span class="win c">C</span></div><div class="y">~31 spoken lines vs ~158; one stage, not eight panels.</div>
+    <div class="k">Comprehension</div><div class="w"><span class="win c">C</span></div><div class="y">The whole never leaves the screen; labels sit on shapes.</div>
+    <div class="k">Transfer</div><div class="w"><span class="win split">Split</span></div><div class="y">C repeats one signature move; A shares moves across a series.</div>
+    <div class="k">Multimedia</div><div class="w"><span class="win c">C</span></div><div class="y">Contiguity, coherence, signalling. A wins on learner pacing.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Ten rules that carry over</h2>
+  <nav class="chips" aria-label="Rules">
+    <a href="#r1"><b>1</b>Keep the whole on screen</a>
+    <a href="#r2"><b>2</b>Label the shape</a>
+    <a href="#r3"><b>3</b>Let them pick the move</a>
+    <a href="#r4"><b>4</b>Name the error</a>
+    <a href="#r5"><b>5</b>Dim what's not in play</a>
+    <a href="#r6"><b>6</b>Counts become numbers</a>
+    <a href="#r7"><b>7</b>One signature, recalled</a>
+    <a href="#r8"><b>8</b>Accept every route</a>
+    <a href="#r9"><b>9</b>Caption, not transcript</a>
+    <a href="#r10"><b>10</b>Fit the form</a>
+  </nav>
+
+  <!-- 1 -->
+  <article class="card rule" id="r1">
+    <h3><span class="n">1</span>Keep the whole on screen</h3>
+    <p class="why">Zooming in hides the whole — and then it takes lines and a mini-map to bring it back.</p>
+    <div class="pair">
+      <figure><div class="frame"><img src="img/a-zoom.jpg" width="1280" height="800" alt="A, zoomed into the blue box with a mini-map of the whole" loading="lazy">
+        <svg viewBox="0 0 1280 800" preserveAspectRatio="none"><rect class="ring bad" x="96" y="166" width="300" height="70"/><rect class="ring bad" x="122" y="326" width="484" height="470"/></svg>
+        <span class="badge no" style="left:31%;top:21%">✕</span></div>
+        <figcaption><span class="tag a">A</span>Zoomed: whole off-screen, mini-map patches it</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-dim.jpg" width="1600" height="900" alt="C, the whole square stays visible but dimmed" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="74" y="84" width="732" height="732"/></svg>
+        <span class="badge ok" style="left:50.3%;top:9.5%">✓</span></div>
+        <figcaption><span class="tag c">C</span>Never zooms: the whole just dims</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article class="card rule" id="r2">
+    <h3><span class="n">2</span>Label the shape, not a card</h3>
+    <p class="why">The eye shouldn't commute between the figure and a list.</p>
+    <div class="pair">
+      <figure><div class="frame"><img src="img/a-zoom.jpg" width="1280" height="800" alt="A, fraction cards sit below the figure, out of view" loading="lazy">
+        <svg viewBox="0 0 1280 800" preserveAspectRatio="none"><rect class="ring bad dash" x="40" y="742" width="600" height="54"/></svg>
+        <span class="badge no" style="left:50%;top:92.5%">✕</span></div>
+        <figcaption><span class="tag a">A</span>Fractions live in cards below the fold</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-stamp.jpg" width="1600" height="900" alt="C, the 1/4 label sits on the little square" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="503" y="134" width="56" height="94"/><rect class="ring good dash" x="440" y="90" width="360" height="360"/></svg>
+        <span class="badge ok" style="left:36.6%;top:13.4%">✓</span></div>
+        <figcaption><span class="tag c">C</span>¼ lands on the square it names</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article class="card rule" id="r3">
+    <h3><span class="n">3</span>Let them pick the move</h3>
+    <p class="why">Choosing × is stronger than hearing "of means ×".</p>
+    <div class="pair">
+      <figure><div class="frame"><img src="img/a-zoom.jpg" width="1280" height="800" alt="A, the tutor states that half of a quarter is half times a quarter" loading="lazy">
+        <svg viewBox="0 0 1280 800" preserveAspectRatio="none"><rect class="ring bad" x="664" y="414" width="312" height="44"/></svg>
+        <span class="badge no" style="left:76%;top:52%">✕</span></div>
+        <figcaption><span class="tag a">A</span>Tutor tells: ½ of ¼ = ½ × ¼</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-ops.jpg" width="1600" height="900" alt="C, the learner chooses between plus, times, minus and divide" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="972" y="578" width="476" height="96"/></svg>
+        <span class="badge ok" style="left:90.5%;top:64.5%">✓</span></div>
+        <figcaption><span class="tag c">C</span>Learner chooses + − × ÷</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article class="card rule" id="r4">
+    <h3><span class="n">4</span>Name the error, in one line</h3>
+    <p class="why">Not "try again" — say what that pick did, using the bound: <i>it sits inside ¼, so it must be smaller.</i> (A does this well too.)</p>
+    <figure class="one"><div class="frame"><img src="img/c-wrong.jpg" width="1600" height="900" alt="C, after tapping plus: a red chip and a one-line reason" loading="lazy">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring bad" x="978" y="580" width="112" height="92"/><rect class="ring good" x="876" y="752" width="668" height="124"/></svg>
+      <span class="badge no" style="left:68.1%;top:64.4%">✕</span></div>
+      <figcaption><span class="tag c">C</span>Wrong pick → its reason, spoken and captioned</figcaption></figure>
+  </article>
+
+  <!-- 5 -->
+  <article class="card rule" id="r5">
+    <h3><span class="n">5</span>Dim what's not in play</h3>
+    <p class="why">Light follows the step: squares fade while the work is inside them, and return when the whole matters again.</p>
+    <div class="pair">
+      <figure><div class="frame"><img src="img/c-ops.jpg" width="1600" height="900" alt="C, whole and little square lit during the multiply step" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring teal" x="74" y="84" width="732" height="732"/></svg></div>
+        <figcaption><span class="tag c">C</span>"Of the whole": squares lit</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-dim.jpg" width="1600" height="900" alt="C, only the green triangle is lit while working inside it" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="420" y="76" width="396" height="392"/></svg></div>
+        <figcaption><span class="tag c">C</span>Inside the triangle: squares dim</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- 6 -->
+  <article class="card rule" id="r6">
+    <h3><span class="n">6</span>Turn counts into the numbers</h3>
+    <p class="why">The 32nd tile becomes the denominator; the 3rd striped tile becomes the numerator. No separate "predict 32" question.</p>
+    <figure class="one"><div class="frame"><img src="img/c-count.jpg" width="1600" height="900" alt="C, the 32nd tile flying toward the ghosted 3/32" loading="lazy">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+        <circle class="ring good" cx="738" cy="209" r="38"/><circle class="ring good" cx="1209" cy="270" r="74"/>
+        <path class="arrow" d="M776 196 Q 1000 90 1150 230"/><path d="M1150 230 l-30 -6 l14 -26 z" fill="var(--good)"/>
+      </svg></div>
+      <figcaption><span class="tag c">C</span>Tile 32 flies into the denominator</figcaption></figure>
+  </article>
+
+  <!-- 7 -->
+  <article class="card rule" id="r7">
+    <h3><span class="n">7</span>One signature, repeated, then recalled</h3>
+    <p class="why">The same stamp marks every holder — 1/1, ¼, ⅛, 1/32 — and the ending replays them in place. Recognition, not a slogan.</p>
+    <div class="pair">
+      <figure><div class="frame"><img src="img/c-stamp.jpg" width="1600" height="900" alt="C, the 1/4 stamp during the lesson" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="503" y="134" width="56" height="94"/></svg>
+        <span class="badge ok" style="left:36.6%;top:13.4%">✓</span></div>
+        <figcaption><span class="tag c">C</span>During: stamp on the holder</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-end.jpg" width="1600" height="900" alt="C, the same 1/4 stamp replayed at the end" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="843" y="224" width="56" height="94"/></svg>
+        <span class="badge ok" style="left:57.8%;top:23.4%">✓</span></div>
+        <figcaption><span class="tag c">C</span>End: the same stamp, same place</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- 8 -->
+  <article class="card rule" id="r8">
+    <h3><span class="n">8</span>Accept every valid route</h3>
+    <p class="why">Slanted or vertical — both hold the stripes, and each is followed through to 3/32. Decompositions aren't unique.</p>
+    <figure class="one"><div class="frame"><img src="img/c-lines.jpg" width="1600" height="900" alt="C, the slanted and the vertical half-lines both accepted" loading="lazy">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+        <line class="glowline" x1="620" y1="56" x2="620" y2="486"/><line class="glowline" x1="406" y1="484" x2="834" y2="56"/>
+      </svg>
+      <span class="badge ok" style="left:38.75%;top:5%">✓</span><span class="badge ok" style="left:53.5%;top:5%">✓</span></div>
+      <figcaption><span class="tag c">C</span>Two lines, two full routes</figcaption></figure>
+  </article>
+
+  <!-- 9 -->
+  <article class="card rule" id="r9">
+    <h3><span class="n">9</span>Caption, not transcript</h3>
+    <p class="why">Speech carries the words. On-screen text should be a short echo, off to the side.</p>
+    <div class="pair">
+      <figure><div class="frame"><img src="img/a-plan.jpg" width="1280" height="800" alt="A, a block of tutor text beside the figure" loading="lazy">
+        <svg viewBox="0 0 1280 800" preserveAspectRatio="none"><rect class="ring bad" x="654" y="280" width="560" height="140"/><rect class="ring bad dash" x="90" y="232" width="536" height="72"/></svg>
+        <span class="badge no" style="left:95%;top:35%">✕</span></div>
+        <figcaption><span class="tag a">A</span>Full transcript + plan strip on screen</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-ops.jpg" width="1600" height="900" alt="C, one short caption bottom right" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="876" y="784" width="668" height="92"/></svg>
+        <span class="badge ok" style="left:96.5%;top:87%">✓</span></div>
+        <figcaption><span class="tag c">C</span>One caption line</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- 10 -->
+  <article class="card rule" id="r10">
+    <h3><span class="n">10</span>Fit the form: left–right becomes top–bottom</h3>
+    <p class="why">One lesson, two shapes. Figure and panel keep their roles; only the split turns.</p>
+    <div class="pair form">
+      <figure><div class="frame"><img src="img/c-ops.jpg" width="1600" height="900" alt="C on a laptop: figure left, panel right" loading="lazy">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none"><rect class="ring good" x="74" y="84" width="732" height="732"/><rect class="ring teal" x="870" y="300" width="680" height="400"/></svg></div>
+        <figcaption><span class="tag c">C</span>Laptop</figcaption></figure>
+      <figure><div class="frame"><img src="img/c-phone.jpg" width="780" height="1688" alt="C on a phone: figure on top, panel below" loading="lazy">
+        <svg viewBox="0 0 780 1688" preserveAspectRatio="none"><rect class="ring good" x="124" y="318" width="532" height="532"/><rect class="ring teal" x="96" y="880" width="588" height="280"/></svg></div>
+        <figcaption><span class="tag c">C</span>Phone</figcaption></figure>
+    </div>
+  </article>
+</section>
+
+<section>
+  <h2>Where A still leads</h2>
+  <div class="mini">
+    <div class="card"><b>Worked solution after a 3rd miss</b><span>C names the error, then shows the answer.</span></div>
+    <div class="card"><b>Learner sets the pace</b><span>A has Next; C auto-advances, with ‹ › to revisit.</span></div>
+    <div class="card"><b>Access &amp; authoring</b><span>Keyboard taps, reduced motion, a script view.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Not taken from A — and why</h2>
+  <div class="card">
+    <div class="swap">
+      <div class="from">Estimate first (&lt; ¼?)</div><div class="ar">→</div><div class="to">The bound lives inside the feedback</div>
+      <div class="from">A character who's wrong</div><div class="ar">→</div><div class="to">Same check, no second voice</div>
+      <div class="from">Predict 32 before counting</div><div class="ar">→</div><div class="to">The count becomes the denominator</div>
+      <div class="from">Simplest-form check</div><div class="ar">→</div><div class="to">3/32 is already simplest</div>
+      <div class="from">Name the strategy at the end</div><div class="ar">→</div><div class="to">Repeat one stamp; replay it</div>
+    </div>
+  </div>
+</section>
+
+<footer>18 November 2026 · Screens captured from both applets at 1600×900 (C), 1280×800 (A) and 390×844 (C, phone).</footer>
+</div>
+</body>
+</html>
